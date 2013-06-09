@@ -1,0 +1,97 @@
+import java.util.LinkedList;
+
+public class StackMiddle {
+
+  /**
+	 * @author Rajan Parmar
+   * @description This is the implemention of a stack with doubly linked list which supports the operation of getting 
+   *              the middle element of the stack in O(1) time.
+	 */
+	public static void main(String[] args) {
+		StackMiddle sm=new StackMiddle();
+		StackMiddle.Stack s=sm.new Stack();
+		
+		s.push(1);
+		s.push(2);
+		s.push(3);
+		s.push(4);
+		s.push(5);
+		
+		try{
+			System.out.println(s.getMid());
+			System.out.println(s.pop());
+			System.out.println(s.getMid());
+		}catch(Exception e){
+			
+		}
+	}
+	class Stack{
+		private LinkList head;
+		private LinkList mid;
+		private int count=0; //Count of the total number of nodes in the stack to aid in getting the middle node
+		Stack(){
+		}
+		public int getHead(){
+			return head.data;
+		}
+		public int getMid(){
+			return mid.data;
+		}
+		public int pop() throws Exception{
+			if(count==0){
+        //underflow exception thrown
+				throw new Exception();
+			}
+			
+			count--;
+      //for pop operation, middle node only changes 
+      // when the count%2==0, means count is an even number after the deletion of new node in the stack
+			if(count < 2) this.mid=null;
+			else if(count %2 == 0){
+				mid=mid.prev;
+			}
+			LinkList temp=this.head;
+			this.head=this.head.prev;
+			this.head.next=null;
+			return temp.data;
+		}
+		public void push(int data){
+      //if the link list is empty, create a new head node
+			if(this.head==null){
+				this.head=new LinkList(data);
+				this.head.next=null;
+				this.head.prev=null;
+			}
+      //else create a new node, join it after the head node and make it the head node
+      else{
+				this.head.next=new LinkList(data);
+				this.head.next.prev=this.head;
+				this.head.next.next=null;
+				this.head=this.head.next;
+			}
+			count++; 
+      //middle node getting finalized: for push operation, middle node only changes 
+      // when the count%2!=0, means count is an odd number after the addition of new node in the stack
+      
+      //middle node will always be for that stack which has >=2 entries in it
+			if(count>=2)
+				if(count==2){
+					this.mid=this.head.prev;
+				}else if(count%2 !=0){
+					this.mid=this.mid.next;
+				}
+		}
+	}
+	
+	class LinkList{
+		LinkList next;
+		LinkList prev;
+		int data;
+		LinkList(int data){
+			this.data=data;
+		}
+		LinkList(){
+			//default constructor
+		}
+	}	
+}
